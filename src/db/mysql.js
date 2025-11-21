@@ -1,8 +1,10 @@
 const mysql = require('mysql')
-require('dotenv').config();
+require('dotenv').config({
+    path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env'
+});
 
 const dbConfig = {
-    host: process.env.DB_HOST,
+    host: "http://121.43.26.102/",
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
