@@ -12,6 +12,8 @@ const dbConfig = {
     queueLimit: 0
 };
 
+console.log(dbConfig)
+
 // 创建数据库连接对象
 const mysqlConnection = mysql.createConnection(dbConfig)
 
