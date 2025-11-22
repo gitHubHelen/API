@@ -75,16 +75,25 @@ pool.getConnection((err, connection) => {
     }
 });
 
-// 手动设置 CORS 头
+// 手动设置 CORS 头（替代 cors 中间件）
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
+    // 设置允许的源
+    res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+
+    // 设置允许的 HTTP 方法
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+    // 设置允许的请求头
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+
+    // 允许携带凭证（如 cookies）
+    res.header('Access-Control-Allow-Credentials', 'true');
 
     // 处理预检请求
     if (req.method === 'OPTIONS') {
-        return res.sendStatus(200);
+        return res.status(200).end();
     }
+
     next();
 });
 
