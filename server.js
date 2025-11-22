@@ -12,11 +12,34 @@ const cors = require('cors');
 const express = require('express');
 const mysql = require('mysql2');
 const app = express();
+const handleRoute = require('./src/routes/index')
+
+// 中间件配置
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// CORS 配置选项
+const corsOptions = {
+    origin: [
+        'http://localhost:3000',  // Live Server 默认端口
+        'http://127.0.0.1:3000',  // Live Server 默认端口
+        'http://localhost:8090',  // 其他可能的本地服务器
+        'http://127.0.0.1:8090',  // 其他可能的本地服务器
+        'http://babiescoding.xyz'  // 生产环境域名
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+
+// 应用 CORS 中间件
+app.use(cors(corsOptions));
 
 // 中间件
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+
 // 创建数据库连接
 const dbConfig = {
     host: process.env.DB_HOST,
@@ -54,15 +77,15 @@ pool.getConnection((err, connection) => {
 
 // 手动设置 CORS 头
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
-  // 处理预检请求
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
-  next();
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+    // 处理预检请求
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+    next();
 });
 
 
@@ -152,7 +175,6 @@ app.get('/debug/db-test', (req, res) => {
 const PORT = process.env.SERVER_PORT || process.env.PORT || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
 
-const handleRoute = require('./src/routes/index')
 // API路由
 app.use('/api', handleRoute);
 
