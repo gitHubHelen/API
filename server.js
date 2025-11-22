@@ -8,15 +8,15 @@ console.log('DB_HOST:', process.env.DB_HOST);
 console.log('DB_USER:', process.env.DB_USER);
 console.log('DB_NAME:', process.env.DB_NAME);
 
+const cors = require('cors');
 const express = require('express');
 const mysql = require('mysql2');
-
 const app = express();
 
 // 中间件
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cors());
 // 创建数据库连接
 const dbConfig = {
     host: process.env.DB_HOST,
@@ -51,6 +51,20 @@ pool.getConnection((err, connection) => {
         connection.release();
     }
 });
+
+// 手动设置 CORS 头
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  // 处理预检请求
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 
 // 健康检查端点
 app.get('/health', (req, res) => {
