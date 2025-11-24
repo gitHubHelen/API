@@ -20,13 +20,14 @@ app.use(express.urlencoded({ extended: true }));
 
 // CORS 配置选项
 const corsOptions = {
-    origin: [
-        'http://localhost:3000',  // Live Server 默认端口
-        'http://127.0.0.1:3000',  // Live Server 默认端口
-        'http://localhost:8090',  // 其他可能的本地服务器
-        'http://127.0.0.1:8090',  // 其他可能的本地服务器
-        'http://babiescoding.xyz'  // 生产环境域名
-    ],
+//    origin: [
+  //      'http://localhost:3000',  // Live Server 默认端口
+    //    'http://127.0.0.1:3000',  // Live Server 默认端口
+      //  'http://localhost:8090',  // 其他可能的本地服务器
+        //'http://127.0.0.1:8090',  // 其他可能的本地服务器
+        //'http://babiescoding.xyz'  // 生产环境域名
+    //],
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
     credentials: true,
