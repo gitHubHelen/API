@@ -1,5 +1,5 @@
 // 加载环境变量
-require('dotenv').config({ path: '.env.production' });
+require('dotenv').config({ path: '.env' });
 
 console.log('=== 环境变量状态 ===');
 console.log('NODE_ENV:', process.env.NODE_ENV);

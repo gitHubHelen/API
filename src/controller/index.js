@@ -57,8 +57,8 @@ const postUserErrorQuestions = (req) => {
 }
 
 // 保存考题
-const postResult = (datas) => {
-    let sql = `INSERT INTO Exam202406(id, title, image, options, examId, type, correctAnswer, difficulty, explanation) VALUES`
+const postQuestions = (datas) => {
+    let sql = `INSERT INTO Exam202409(id, question_text, question_images, options, examId, type, correct_answer, difficulty, explanation) VALUES`
 
     datas.map(item => {
         item.image = JSON.stringify(item.image)
@@ -72,6 +72,7 @@ const postResult = (datas) => {
 }
 
 module.exports = {
+    postQuestions,
     getUserErrorQuestions,
     postUserErrorQuestions
 }

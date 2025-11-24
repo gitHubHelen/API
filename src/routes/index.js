@@ -33,8 +33,20 @@
 
 const express = require('express');
 const router = express.Router();
-const { getUserErrorQuestions, postUserErrorQuestions } = require('../controller/index');
+const { postQuestions, getUserErrorQuestions, postUserErrorQuestions } = require('../controller/index');
 const { SucessMode, FailureMode } = require('../model');
+
+// 新增题目
+router.post('/questions', (req, res) => {
+    postQuestions(req).then(questions => {
+        let { data } = new SucessMode(questions)
+        res.json({
+            ...data,
+            ...req.params
+        })
+    })
+})
+
 router.get('/error-questions/:uName/:examId', (req, res) => {
     getUserErrorQuestions(req).then(questions => {
         let { data } = new SucessMode(questions)
@@ -51,9 +63,7 @@ router.get('/error-questions/:uName/:examId', (req, res) => {
 })
 
 router.post('/error-questions', (req, res) => {
-    console.log(req)
     postUserErrorQuestions(req).then(questions => {
-        console.log(questions, 'questions')
         let { data } = new SucessMode(questions)
         res.json({
             ...data,
