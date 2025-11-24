@@ -36,21 +36,24 @@ const getUserErrorQuestions = (req) => {
 
 // 插入或更新考试记录
 const postUserErrorQuestions = (req) => {
-    let { uId, examId, wrongList } = req.body
+    let { studentName, examId, wrongList } = req.body
     let sql = ''
     // 根据 u_id & exam_id 查询考试记录，如果有，更新考试记录，无则新增
-    sql = `SELECT id FROM records WHERE u_id = ${uId} AND exam_id = '${examId}'`
-    return new Promise((resolve, reject) => {
-        return execSql(sql).then(data => {
-            if (!data.length) {
-                sql = `INSERT INTO records(wrong_list, exam_id, u_id) VALUES ('[1]', 'CIE202406',${uId})`
+    return execSql(`select id from students where name = '${studentName}'`).then(data => {
+        const { id: uId } = data[0]
+        sql = `SELECT id FROM records WHERE u_id = ${uId} AND exam_id = '${examId}'`
+        return new Promise((resolve, reject) => {
+            return execSql(sql).then(data => {
+                if (!data.length) {
+                    sql = `INSERT INTO records(wrong_list, exam_id, u_id) VALUES ('[1]', '${examId}', ${uId})`
+                    return execSql(sql).then(res => {
+                        resolve(res)
+                    })
+                }
+                sql = `UPDATE records SET wrong_list = '${JSON.stringify(wrongList)}' WHERE u_id = '${uId}'`
                 return execSql(sql).then(res => {
                     resolve(res)
                 })
-            }
-            sql = `UPDATE records SET wrong_list = '${JSON.stringify(wrongList)}' WHERE u_id = '${uId}'`
-            return execSql(sql).then(res => {
-                resolve(res)
             })
         })
     })
@@ -71,7 +74,15 @@ const postQuestions = (datas) => {
     return execSql(sql)
 }
 
+// 获取考题
+const getQuestions = (examId) => {
+    let sql = `SELECT id,type,question_text,question_images,options,correct_answer,difficulty,explanation FROM ${examId} limit 10`
+
+    return execSql(sql)
+}
+
 module.exports = {
+    getQuestions,
     postQuestions,
     getUserErrorQuestions,
     postUserErrorQuestions

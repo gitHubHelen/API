@@ -1,10 +1,10 @@
 // 响应模板
 class ModelBase {
-    constructor(data, message, status) {
+    constructor(data, message, code) {
         if (typeof data === 'string') {
             this.data = null
-            this.message = 'sucessed'
-            this.status = '1'
+            this.message = ''
+            this.status = 0
         }
 
         if (data) {
@@ -15,8 +15,8 @@ class ModelBase {
             this.message = message
         }
 
-        if (status) {
-            this.status = status
+        if (code) {
+            this.code = code
         }
     }
 }
@@ -24,15 +24,17 @@ class ModelBase {
 // 成功数据模型
 class SucessMode extends ModelBase {
     constructor(data) {
-        super(data, '', '')
-        this.data = data
+        super(data, '请求成功', 200)
+        // this.data = data
+        // this.message = '请求成功'
+        // this.code = 200
     }
 }
 
 // 失败数据模型
 class FailureMode extends ModelBase {
     constructor(message) {
-        super(null, message, '0')
+        super(null, message, 201)
     }
 }
 

@@ -1,20 +1,8 @@
 const mysql = require('mysql')
+const dbConfig = require('./config')
 require('dotenv').config({
     path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env'
 });
-
-const dbConfig = {
-    host: process.env.HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-};
-
-console.log(dbConfig)
 
 // 创建数据库连接对象
 const mysqlConnection = mysql.createConnection(dbConfig)

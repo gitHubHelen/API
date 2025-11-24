@@ -33,7 +33,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { postQuestions, getUserErrorQuestions, postUserErrorQuestions } = require('../controller/index');
+const { postQuestions, getUserErrorQuestions, postUserErrorQuestions, getQuestions } = require('../controller/index');
 const { SucessMode, FailureMode } = require('../model');
 
 // 新增题目
@@ -43,6 +43,23 @@ router.post('/questions', (req, res) => {
         res.json({
             ...data,
             ...req.params
+        })
+    })
+})
+
+// 获取考试题目
+router.get('/questions/:examId', (req, res) => {
+    let { examId } = req.params
+    getQuestions(examId).then(questions => {
+        let data = new SucessMode(questions) // 消息，状态码，数据
+        res.json({
+            ...data,
+            examId
+        })
+    }).catch(err => {
+        let errData = new FailureMode(err)
+        res.json({
+            ...errData
         })
     })
 })

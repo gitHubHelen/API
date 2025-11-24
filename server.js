@@ -13,6 +13,7 @@ const express = require('express');
 const mysql = require('mysql2');
 const app = express();
 const handleRoute = require('./src/routes/index')
+const dbConfig = require('./src/db/config')
 
 // 中间件配置
 app.use(express.json());
@@ -20,13 +21,13 @@ app.use(express.urlencoded({ extended: true }));
 
 // CORS 配置选项
 const corsOptions = {
-//    origin: [
-  //      'http://localhost:3000',  // Live Server 默认端口
-    //    'http://127.0.0.1:3000',  // Live Server 默认端口
-      //  'http://localhost:8090',  // 其他可能的本地服务器
-        //'http://127.0.0.1:8090',  // 其他可能的本地服务器
-        //'http://babiescoding.xyz'  // 生产环境域名
-    //],
+    // origin: [
+    //     'http://localhost:3000',  // Live Server 默认端口
+    //     'http://127.0.0.1:3000',  // Live Server 默认端口
+    //     'http://localhost:8080',  // 其他可能的本地服务器
+    //     'http://127.0.0.1:8080',  // 其他可能的本地服务器
+    //     'http://babiescoding.xyz'  // 生产环境域名
+    // ],
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
@@ -41,17 +42,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 创建数据库连接
-const dbConfig = {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT || 3306,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    charset: 'utf8mb4',
-    timezone: '+08:00'
-};
-
+// 测试变量
 console.log('数据库配置:', {
     host: dbConfig.host,
     port: dbConfig.port,
@@ -59,6 +50,7 @@ console.log('数据库配置:', {
     database: dbConfig.database
 });
 
+// 创建数据库连接
 const pool = mysql.createPool(dbConfig);
 
 // 测试数据库连接
@@ -78,6 +70,7 @@ pool.getConnection((err, connection) => {
 
 // 手动设置 CORS 头（替代 cors 中间件）
 app.use((req, res, next) => {
+    console.log(req.headers.origin, 'origin')
     // 设置允许的源
     res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
 
