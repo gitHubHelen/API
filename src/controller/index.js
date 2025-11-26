@@ -45,12 +45,12 @@ const postUserErrorQuestions = (req) => {
         return new Promise((resolve, reject) => {
             return execSql(sql).then(data => {
                 if (!data.length) {
-                    sql = `INSERT INTO records(wrong_list, exam_id, u_id) VALUES ('[1]', '${examId}', ${uId})`
+                    sql = `INSERT INTO records(wrong_list, exam_id, u_id) VALUES ('${wrongList}', '${examId}', ${uId})`
                     return execSql(sql).then(res => {
                         resolve(res)
                     })
                 }
-                sql = `UPDATE records SET wrong_list = '${JSON.stringify(wrongList)}' WHERE u_id = '${uId}'`
+                sql = `UPDATE records SET wrong_list = '${JSON.stringify(wrongList)}' WHERE u_id = '${uId}' and exam_id='${examId}'`
                 return execSql(sql).then(res => {
                     resolve(res)
                 })
