@@ -37,25 +37,25 @@ const getUserErrorQuestions = (req) => {
 // 插入或更新考试记录
 const postUserErrorQuestions = (req) => {
     let { studentName, examId, wrongList } = req.body
+    console.log(typeof wrongList, wrongList)
     let sql = ''
     // 根据 u_id & exam_id 查询考试记录，如果有，更新考试记录，无则新增
+    // 多次写入记录，目的查看小朋友的错题，哪类题易错
     return execSql(`select id from students where name = '${studentName}'`).then(data => {
         const { id: uId } = data[0]
-        sql = `SELECT id FROM records WHERE u_id = ${uId} AND exam_id = '${examId}'`
-        return new Promise((resolve, reject) => {
-            return execSql(sql).then(data => {
-                if (!data.length) {
-                    sql = `INSERT INTO records(wrong_list, exam_id, u_id) VALUES ('${wrongList}', '${examId}', ${uId})`
-                    return execSql(sql).then(res => {
-                        resolve(res)
-                    })
-                }
-                sql = `UPDATE records SET wrong_list = '${JSON.stringify(wrongList)}' WHERE u_id = '${uId}' and exam_id='${examId}'`
-                return execSql(sql).then(res => {
-                    resolve(res)
-                })
-            })
-        })
+        // sql = `SELECT id FROM records WHERE u_id = ${uId} AND exam_id = '${examId}'`
+        // return new Promise((resolve, reject) => {
+        // return execSql(sql).then(data => {
+        // if (!data.length) {
+        sql = `INSERT INTO records(wrong_list, exam_id, u_id) VALUES ('${JSON.stringify(wrongList)}', '${examId}', ${uId})`
+        return execSql(sql)
+        // }
+        // sql = `UPDATE records SET wrong_list = '${JSON.stringify(wrongList)}' WHERE u_id = '${uId}' and exam_id='${examId}'`
+        // return execSql(sql).then(res => {
+        //     resolve(res)
+        // })
+        // })
+        // })
     })
 }
 
