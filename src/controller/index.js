@@ -76,7 +76,7 @@ const postQuestions = (datas) => {
 
 // 获取考题
 const getQuestions = (examId) => {
-    let sql = `SELECT id,type,question_text,question_images,options,correct_answer,difficulty,explanation FROM ${examId} where id < 31`
+    let sql = `SELECT id,type,question_text,question_images,options,correct_answer,difficulty,explanation FROM ${examId} where id > 31`
     return execSql(sql)
 }
 
